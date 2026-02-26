@@ -21,4 +21,8 @@ public class BaseResponse<T> {
                 .result(result)
                 .build();
     }
+
+    public static <T> BaseResponse failure(BaseResponseStatus status) {
+        return failure(null, status);
+    }
 }

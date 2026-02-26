@@ -21,4 +21,9 @@ public class UserController {
         userService.signup(dto);
         return ResponseEntity.ok("등록 성공");
     }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserDto.LoginReq dto) {
+        return ResponseEntity.ok(userService.login(dto));
+    }
 }

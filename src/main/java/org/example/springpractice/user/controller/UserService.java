@@ -20,4 +20,12 @@ public class UserService {
         }
         userRepository.save(dto.toEntity());
     }
+
+    public UserDto.LoginRes login(UserDto.LoginReq dto) {
+        User entity = userRepository.findByEmailAndPassword(dto.getEmail(), dto.getPassword()).orElseThrow(
+                //TODO: 유효하지 않은 입력값(이메일 or 패스워드)
+                () -> BaseException.from(BaseResponseStatus.INVALID_INPUT)
+        );
+        return UserDto.LoginRes.fromEntity(entity);
+    }
 }

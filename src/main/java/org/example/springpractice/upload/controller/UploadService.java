@@ -3,6 +3,8 @@ package org.example.springpractice.upload.controller;
 import io.awspring.cloud.s3.S3Operations;
 import io.awspring.cloud.s3.S3Resource;
 import lombok.RequiredArgsConstructor;
+import org.example.springpractice.upload.model.Upload;
+import org.example.springpractice.upload.model.UploadDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,7 @@ public class UploadService {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String s3BucketName;
     private final S3Operations s3Operations;
+    private final UploadRepository uploadRepository;
 
     private String saveFile(MultipartFile file) throws IOException {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -28,11 +31,13 @@ public class UploadService {
         return s3Resource.getURL().toString();
     }
 
-    public List<String> upload(List<MultipartFile> files) {
-        List<String> uploadPaths = new ArrayList<>();
+    public List<UploadDto.UploadRes> upload(List<MultipartFile> files) {
+        List<UploadDto.UploadRes> uploadPaths = new ArrayList<>();
         try {
             for (MultipartFile file : files) {
-                uploadPaths.add(saveFile(file));
+                String url = saveFile(file);
+                Upload upload = uploadRepository.save(Upload.builder().url(url).build());
+                uploadPaths.add(UploadDto.UploadRes.fromEntity(upload));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

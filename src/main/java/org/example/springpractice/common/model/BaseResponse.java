@@ -1,8 +1,10 @@
 package org.example.springpractice.common.model;
 
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class BaseResponse<T> {
 
     private BaseResponseStatus status;

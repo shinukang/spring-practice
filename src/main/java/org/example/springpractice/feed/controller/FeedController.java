@@ -1,12 +1,11 @@
 package org.example.springpractice.feed.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.springpractice.common.model.BaseResponse;
+import org.example.springpractice.feed.model.FeedDto;
 import org.example.springpractice.upload.controller.UploadService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,7 +19,16 @@ public class FeedController {
 
     @PostMapping("/upload/image")
     public ResponseEntity upload(@RequestParam("images") List<MultipartFile> images) {
-        List<String> result = uploadService.upload(images);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(uploadService.upload(images));
+    }
+
+    @PostMapping("/reg")
+    public ResponseEntity register(@RequestBody FeedDto.RegisterReq dto) {
+        return ResponseEntity.ok(feedService.register(dto));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity list() {
+        return ResponseEntity.ok(BaseResponse.success(feedService.list()));
     }
 }
